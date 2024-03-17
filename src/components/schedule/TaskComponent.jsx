@@ -1,10 +1,10 @@
 import React from 'react'
 import { FlatList, Image, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native'
 import { useNavigation } from '@react-navigation/native';
+import { Modal, Portal, Button, PaperProvider } from 'react-native-paper';
 
 
-
-export default function TaskComponent({setValueState, selectWork, setCheck, work, frequency}) {
+export default function TaskComponent({setValueState, selectWork, setCheck, work, frequency, showModal, showModalDay, showModalNote}) {
   const navigation = useNavigation();
   const goToScreen = () => {
     // Chuyển đến màn hình có tên là "AddSchedule"
@@ -34,6 +34,9 @@ export default function TaskComponent({setValueState, selectWork, setCheck, work
       }}>
           Tạo lịch trình
       </Text>
+      {/* <Button style={{marginTop: 30, color:'black'}} onPress={showModal}>
+        Show
+      </Button> */}
       <View>
         
         <View style={{
@@ -94,7 +97,7 @@ export default function TaskComponent({setValueState, selectWork, setCheck, work
                 <Text>{frequency||'Hàng ngày'}</Text>
                 </View>
             </TouchableOpacity>
-            <TouchableOpacity onPress={()=>{setValueState('gio')}}>
+            <TouchableOpacity onPress={()=>{setValueState('gio'); showModal()}}>
                 <View style={{
                     flexDirection:'row',
                     justifyContent: 'space-between',
@@ -115,7 +118,8 @@ export default function TaskComponent({setValueState, selectWork, setCheck, work
                 <Text>Tưới nước</Text>
                 </View>
             </TouchableOpacity>
-            <TouchableOpacity onPress={()=>{setValueState('batDau')}}>
+       
+            <TouchableOpacity onPress={()=>{setValueState('batDau'), showModalDay()}}>
                 <View style={{
                     flexDirection:'row',
                     justifyContent: 'space-between',
@@ -136,7 +140,7 @@ export default function TaskComponent({setValueState, selectWork, setCheck, work
                 <Text>Tưới nước</Text>
                 </View>
             </TouchableOpacity>
-            <TouchableOpacity onPress={()=>{setValueState('ghiChu')}}>
+            <TouchableOpacity onPress={()=>{setValueState('ghiChu'); showModalNote()}}>
                 <View style={{
                     flexDirection:'row',
                     justifyContent: 'space-between',
@@ -185,6 +189,8 @@ export default function TaskComponent({setValueState, selectWork, setCheck, work
         </TouchableHighlight>
 
       </View>
+
+        
   </View>
   )
 }
