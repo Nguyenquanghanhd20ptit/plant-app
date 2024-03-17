@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     borderRadius: 5,
     marginBottom: 10,
-    placeholderTextColor: "#f6f6f8"
+    placeholderTextColor: "#ccc"
   },
   button: {
     backgroundColor: "#18B65B",
