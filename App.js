@@ -8,6 +8,9 @@ import SelectTree from './src/screens/schedule/SelectTree';
 import AddTask from './src/screens/schedule/AddTask';
 import AddWork from './src/screens/schedule/AddWork';
 import AddFrequency from './src/screens/schedule/AddFrequency';
+import Statistic from './src/screens/schedule/Statistic';
+import Crops from './src/screens/schedule/Crops';
+import Test from './src/screens/schedule/Test';
 
 const Stack = createStackNavigator();
 
@@ -48,6 +51,21 @@ export default function App() {
          <Stack.Screen
           name="AddFrequency"
           component={AddFrequency}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Statistic"
+          component={Statistic}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Crops"
+          component={Crops}
+          options={{ headerShown: false }}
+        />
+         <Stack.Screen
+          name="Test"
+          component={Test}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

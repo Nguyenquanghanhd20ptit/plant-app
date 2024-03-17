@@ -1,22 +1,37 @@
 import React from 'react'
-import { Image, Text, View } from 'react-native'
+import { Image, Text, TouchableOpacity, View } from 'react-native'
+import { useNavigation } from '@react-navigation/native';
 
-export default function Menu({navigation}) {
+export default function Menu() {
+  const navigation = useNavigation();
+  const goToScreen = () => {
+    // Chuyển đến màn hình có tên là "AddSchedule"
+    navigation.navigate('Test');
+    // console.log("mmmm")
+  };
+   const goToScreen1 = () => {
+    // Chuyển đến màn hình có tên là "AddSchedule"
+    navigation.navigate('Crops');
+    // console.log("mmmm")
+  };
+
   return (
     <View style={{
         flexDirection: 'row', justifyContent: 'space-between',  paddingVertical: 20, paddingHorizontal: 10, backgroundColor: '#FFFFFF'
     }}>
+      <TouchableOpacity onPress={goToScreen1}>
       <View style={{
         display:'flex',
         justifyContent: 'center',
         alignItems: 'center'
       }}>
       <Image
-        style={{height: 20, width: 18}}
+         style={{height: 20, width: 18}}
         source={require('../assets/icons/cay-trong.png')}
       />
       <Text>Cây trồng</Text>
       </View>
+      </TouchableOpacity>
       <View style={{
         display:'flex',
         justifyContent: 'center',
@@ -39,6 +54,7 @@ export default function Menu({navigation}) {
       />
       <Text>Chụp cây</Text>
       </View>
+      <TouchableOpacity onPress={goToScreen}>
       <View style={{
         display:'flex',
         justifyContent: 'center',
@@ -50,6 +66,8 @@ export default function Menu({navigation}) {
       />
       <Text>Chăm sóc</Text>
       </View>
+      </TouchableOpacity>
+     
       <View style={{
         display:'flex',
         justifyContent: 'center',
