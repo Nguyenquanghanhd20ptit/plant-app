@@ -13,13 +13,14 @@ import Crops from './src/screens/schedule/Crops';
 import Test from './src/screens/schedule/Test';
 import LoginScreen from './src/screens/login/LoginScreen';
 import RegisterScreen from './src/screens/register/RegisterScreen';
+import MainGuide from './src/screens/guides/MainGuide';
 
 const Stack = createStackNavigator();
 
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login">
+      <Stack.Navigator initialRouteName="MainGuide">
         <Stack.Screen
           name="Onboarding"
           component={Onboarding}
@@ -80,6 +81,15 @@ export default function App() {
           component={Test}
           options={{ headerShown: false }}
         />
+
+        {/* //Guide Take Care Tree */}
+        <Stack.Screen
+          name="MainGuide"
+          component={MainGuide}
+          options={{ headerShown: false }}
+        />
+        
+
       </Stack.Navigator>
     </NavigationContainer>
   );
