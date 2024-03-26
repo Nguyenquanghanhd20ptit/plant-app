@@ -8,16 +8,24 @@ import SelectTree from './src/screens/schedule/SelectTree';
 import AddTask from './src/screens/schedule/AddTask';
 import AddWork from './src/screens/schedule/AddWork';
 import AddFrequency from './src/screens/schedule/AddFrequency';
+import NotificationScreen from './src/screens/notification/NotificationScreen';
+import Notice from './src/screens/notification/Notice';
 
 const Stack = createStackNavigator();
 
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Onboarding">
-        <Stack.Screen
+      <Stack.Navigator initialRouteName="Notify">
+        <Stack.Screen 
           name="Onboarding"
           component={Onboarding}
+          options={{ headerShown: false }}
+        />
+
+        <Stack.Screen
+          name="Notify"
+          component={Notice}
           options={{ headerShown: false }}
         />
          <Stack.Screen
