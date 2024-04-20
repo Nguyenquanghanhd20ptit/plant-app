@@ -8,6 +8,11 @@ import SelectTree from './src/screens/schedule/SelectTree';
 import AddTask from './src/screens/schedule/AddTask';
 import AddWork from './src/screens/schedule/AddWork';
 import AddFrequency from './src/screens/schedule/AddFrequency';
+import Statistic from './src/screens/schedule/Statistic';
+import Crops from './src/screens/schedule/Crops';
+import Test from './src/screens/schedule/Test';
+import LoginScreen from './src/screens/login/LoginScreen';
+import RegisterScreen from './src/screens/register/RegisterScreen';
 import NotificationScreen from './src/screens/notification/NotificationScreen';
 import Notice from './src/screens/notification/Notice';
 
@@ -22,7 +27,6 @@ export default function App() {
           component={Onboarding}
           options={{ headerShown: false }}
         />
-
         <Stack.Screen
           name="Notify"
           component={Notice}
@@ -31,6 +35,16 @@ export default function App() {
          <Stack.Screen
           name="MainSchedule"
           component={MainSchedule}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Login"
+          component={LoginScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Register"
+          component={RegisterScreen}
           options={{ headerShown: false }}
         />
         <Stack.Screen
@@ -43,7 +57,7 @@ export default function App() {
           component={SelectTree}
           options={{ headerShown: false }}
         />
-         <Stack.Screen
+        <Stack.Screen
           name="AddTask"
           component={AddTask}
           options={{ headerShown: false }}
@@ -53,9 +67,24 @@ export default function App() {
           component={AddWork}
           options={{ headerShown: false }}
         />
-         <Stack.Screen
+        <Stack.Screen
           name="AddFrequency"
           component={AddFrequency}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Statistic"
+          component={Statistic}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Crops"
+          component={Crops}
+          options={{ headerShown: false }}
+        />
+         <Stack.Screen
+          name="Test"
+          component={Test}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

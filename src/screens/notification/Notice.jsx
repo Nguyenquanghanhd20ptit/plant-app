@@ -207,7 +207,6 @@ const styles = StyleSheet.create({
     color: 'blue',
   },
   delete: {
-    color: 'red',
     width: 26,
     height: 20,
     marginLeft: 10
