@@ -15,7 +15,7 @@ export default function LoginScreen() {
       Alert.alert('Thông báo', 'Email không hợp lệ');
       return;
     }
-    if (email === "hanhd20ptit@gmail.com" && password === "hanh123") {
+    if (email === "hanhd20ptit@gmail.com" && password === "hanh12345") {
       goToScreenSuccess();
     }
     else{
@@ -45,7 +45,7 @@ export default function LoginScreen() {
         <TextInput
           style={styles.input}
           placeholder="Mật khẩu"
-          secureTextEntry
+          secureTextEntry={true}
           onChangeText={text => setPassword(text)}
           value={password}
         />

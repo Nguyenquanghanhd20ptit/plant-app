@@ -4,7 +4,8 @@ import { useNavigation } from '@react-navigation/native';
 import { Modal, Portal, Button, PaperProvider } from 'react-native-paper';
 
 
-export default function TaskComponent({setValueState, selectWork, setCheck, work, frequency, showModal, showModalDay, showModalNote}) {
+export default function TaskComponent({setValueState, selectWork, setCheck, work, frequency,
+   showModal, showModalDay, showModalNote, selectedHorse, selectedDay,note}) {
   const navigation = useNavigation();
   const goToScreen = () => {
     // Chuyển đến màn hình có tên là "AddSchedule"
@@ -115,7 +116,7 @@ export default function TaskComponent({setValueState, selectWork, setCheck, work
                 />
                 <Text style={{color:'#18B65B', paddingLeft: 10}}>Giờ</Text>
                 </View>
-                <Text>Tưới nước</Text>
+                <Text>{selectedHorse}</Text>
                 </View>
             </TouchableOpacity>
        
@@ -137,7 +138,7 @@ export default function TaskComponent({setValueState, selectWork, setCheck, work
                 />
                 <Text style={{color:'#18B65B', paddingLeft: 10}}>Ngày bắt đầu</Text>
                 </View>
-                <Text>Tưới nước</Text>
+                <Text>{selectedDay}</Text>
                 </View>
             </TouchableOpacity>
             <TouchableOpacity onPress={()=>{setValueState('ghiChu'); showModalNote()}}>
@@ -158,7 +159,7 @@ export default function TaskComponent({setValueState, selectWork, setCheck, work
                 />
                 <Text style={{color:'#18B65B', paddingLeft: 10}}>Ghi chú</Text>
                 </View>
-                <Text>Tưới nước</Text>
+                <Text>{note}</Text>
                 </View>
             </TouchableOpacity>
             
