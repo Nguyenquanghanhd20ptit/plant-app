@@ -21,11 +21,11 @@ export default function RegisterScreen() {
       Alert.alert('Thông báo', 'Vui lòng điền đầy đủ thông tin đăng kí');
       return;
     }
-    if (EMAIL_PATTERN.test(email)) {
+    if (!EMAIL_PATTERN.test(email)) {
       Alert.alert('Thông báo', 'Email không hợp lệ');
       return;
     }
-    if (PHONE_PATTERN.test(phoneNumber)) {
+    if (!PHONE_PATTERN.test(phoneNumber)) {
       Alert.alert('Thông báo', 'Số điện thoại không hợp lệ')
       return;
     }
@@ -92,8 +92,7 @@ export default function RegisterScreen() {
         <TextInput
           style={styles.input}
           placeholder="Mật khẩu"
-          keyboardType='visible-password'
-          secureTextEntry
+          secureTextEntry={true}
           onChangeText={text => setPassword(text)}
           value={password}
         />
@@ -101,8 +100,7 @@ export default function RegisterScreen() {
         <TextInput
           style={styles.input}
           placeholder="Nhập lại Mật khẩu"
-          keyboardType='visible-password'
-          secureTextEntry
+          secureTextEntry={true}
           onChangeText={text => setComfirmPassword(text)}
           value={comfirmPassword}
         />
