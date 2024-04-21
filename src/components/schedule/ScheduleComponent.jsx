@@ -2,6 +2,7 @@ import React from 'react'
 import { FlatList, Image, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native'
 import { ScrollView } from 'react-native-web'
 import { useNavigation } from '@react-navigation/native';
+import { API_URL } from '../../constants/commonConstant';
 
 const flowerTrees = [
   {
@@ -22,11 +23,56 @@ const flowerTrees = [
   },
   // Thêm các cây hoa khác nếu cần
 ];
+
+const treeSchedulers = [];
+const callToApiGetScheduler = () => {
+  console.log("fdf")
+  fetch(  API_URL.PlantApp +'/authentication/login', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      email: email,
+      password: password,
+    }),
+  })
+    .then(response => {
+      console.log("fddffdf");
+      if (!response.ok) {
+        throw new Error('Đăng nhập thất bại');
+      }
+      return response.json();
+    })
+    .then(data => {
+      console.log("fddf")
+      if (data && data.errorCode === '00') {
+        const user = JSON.parse(data.data);
+        AsyncStorage.setItem(LOCALSTORATE_CONSTANT.MyInfo, JSON.stringify(user))
+          .then(() => {
+            goToScreenSuccess();
+            Alert.alert('Thông báo', 'Đăng nhập thành công');
+            console.log('Save user success!');
+          })
+          .catch(error => {
+            console.error('Error saving user :', error);
+          });
+      } else if (data && data.errorMessage) {
+        Alert.alert('Thông báo', data.errorMessage);
+      } else {
+        Alert.alert('Thông báo', 'Đăng nhập thất bại');
+      }
+    })
+    .catch(error => {
+      Alert.alert('Thông báo', error.message);
+    });
+};
+
 export default function ScheduleComponent() {
   const navigation = useNavigation();
   const goToScreen = () => {
     // Chuyển đến màn hình có tên là "AddSchedule"
-    navigation.navigate('AddSchedule',{name:''});
+    navigation.navigate('AddSchedule',{plant:''});
     // console.log("mmmm")
   };
 

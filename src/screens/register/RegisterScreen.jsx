@@ -2,20 +2,57 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, Alert, TouchableHighlight, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { EMAIL_PATTERN, PHONE_PATTERN } from '../../constants/regex/RegexConstant';
+import { API_URL } from '../../constants/commonConstant';
 export default function RegisterScreen() {
   const [username, setUsername] = useState('');
-  const [fullname, setFullname] = useState('');
+  const [fullName, setFullname] = useState('');
   const [email, setEmail] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [address, setAddress] = useState('');
   const [password, setPassword] = useState('');
-  const [comfirmPassword, setComfirmPassword] = useState('');
+  const [confirmPassword, setComfirmPassword] = useState('');
   const navigation = useNavigation();
+
+  const callToApiRegister = async () => {
+    try {
+      const response = await fetch(
+        API_URL.PlantApp + '/authentication/register',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({username, password,confirmPassword,
+            fullName,email,address,phoneNumber}),
+        },
+      );
+      if (response.ok) {
+        const data = await response.json();
+        if(data && data.errorCode === "00"){
+          const message = JSON.parse(data.data);
+          goToScreenSuccess();
+          Alert.alert('Thông báo', 'Đăng kí thành công');
+        }else if(data && data.errorMessage){
+          Alert.alert('Thông báo',  data.errorMessage);
+        }
+        else{
+          Alert.alert('Thông báo', 'Đăng kí thất bại');
+        }
+        
+      } else {
+        Alert.alert('Thông báo', 'Đăng kí thất bại');
+      }
+    } catch (error) {
+      Alert.alert('Thông báo', error);
+    }
+
+  };
+
   const handleRegister = () => {
-    const isNull = !username || !fullname
+    const isNull = !username || !fullName
       || !email || !phoneNumber
       || !address || !password
-      || !comfirmPassword;
+      || !confirmPassword;
 
     if (isNull) {
       Alert.alert('Thông báo', 'Vui lòng điền đầy đủ thông tin đăng kí');
@@ -37,12 +74,11 @@ export default function RegisterScreen() {
       Alert.alert('Thông báo', ' Mật khẩu phải lớn hơn 8 kí tự');
       return;
     }
-    if (password !== comfirmPassword) {
+    if (password !== confirmPassword) {
       Alert.alert('THông báo', 'Mật khẩu không khớp');
       return;
     }
-    Alert.alert('Thông báo', 'Đăng kí tài khoản thành công');
-    goToScreenSuccess();
+    callToApiRegister();
   };
   const goToScreenLogin = () => {
     navigation.navigate('Login');
@@ -67,7 +103,7 @@ export default function RegisterScreen() {
           style={styles.input}
           placeholder="Họ và tên"
           onChangeText={text => setFullname(text)}
-          value={fullname}
+          value={fullName}
         />
         <TextInput
           style={styles.input}
@@ -102,7 +138,7 @@ export default function RegisterScreen() {
           placeholder="Nhập lại Mật khẩu"
           secureTextEntry={true}
           onChangeText={text => setComfirmPassword(text)}
-          value={comfirmPassword}
+          value={confirmPassword}
         />
         <TouchableHighlight
           style={styles.button}

@@ -4,16 +4,12 @@ import { useNavigation } from '@react-navigation/native';
 
 
 
-export default function SelectWork({setSelectWork, setCheck, selectWork, goToScreen1}) {
+export default function SelectWork({reminder,setReminder, goToScreen1}) {
     const navigation = useNavigation();
   const goToScreen = () => {
     navigation.navigate('SelectTree');
     console.log("mmmm")
   };
-  const e=selectWork;
-
-
-console.log("vvvv", e)
 
   return (
     <View style={{
@@ -51,10 +47,12 @@ console.log("vvvv", e)
           <View>
             <TouchableOpacity 
              style={{
-                backgroundColor: selectWork === 'Tưới nước' ? '#ccc' : 'transparent',
+                backgroundColor: reminder.work === 'Tưới nước' ? '#ccc' : 'transparent',
                 paddingHorizontal: 10,
             }}
-            onPress={()=>{setSelectWork('Tưới nước'); }}>
+            onPress={() => {
+              setReminder({ ...reminder, work: 'Tưới nước' });
+            }}>            
                 <View style={{
                     flexDirection:'row',
                     justifyContent: 'space-between',
@@ -77,10 +75,15 @@ console.log("vvvv", e)
             </TouchableOpacity>
             <TouchableOpacity 
              style={{
-                backgroundColor: selectWork === 'Bón phân' ? '#ccc' : 'transparent',
+                backgroundColor: reminder.work === 'Bón phân' ? '#ccc' : 'transparent',
                 paddingHorizontal: 10,
             }}
-            onPress={()=>{setSelectWork('Bón phân'); }}>
+            onPress={() => {
+              setReminder(prevReminder => ({
+                ...prevReminder,
+                work: 'Bón phân' 
+              }));
+            }}>
                 <View style={{
                     flexDirection:'row',
                     justifyContent: 'space-between',
@@ -103,9 +106,9 @@ console.log("vvvv", e)
             </TouchableOpacity>
             <TouchableOpacity 
             style={{
-                backgroundColor: selectWork === 'Kiểm tra sâu bệnh' ? '#ccc' : 'transparent',
+                backgroundColor: reminder.work === 'Kiểm tra sâu bệnh' ? '#ccc' : 'transparent',
                 paddingHorizontal: 10,
-            }} onPress={()=>{setSelectWork('Kiểm tra sâu bệnh'); }}>
+            }}  onPress={()=> setReminder({ ...reminder, work: 'Kiểm tra sâu bệnh' })}>
                 <View style={{
                     flexDirection:'row',
                     justifyContent: 'space-between',

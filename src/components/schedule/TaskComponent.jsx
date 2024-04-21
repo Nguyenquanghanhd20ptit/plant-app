@@ -2,24 +2,24 @@ import React from 'react'
 import { FlatList, Image, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native'
 import { useNavigation } from '@react-navigation/native';
 import { Modal, Portal, Button, PaperProvider } from 'react-native-paper';
+import moment from 'moment';
 
-
-export default function TaskComponent({setValueState, selectWork, setCheck, work, frequency,
+export default function TaskComponent({ reminder,setReminder,setValueState, setCheck,
    showModal, showModalDay, showModalNote, selectedHorse, selectedDay,note}) {
+    const convertUnixToDate = (unixTime) => {
+      return moment(unixTime).format('DD-MM-YYYY');
+    };
   const navigation = useNavigation();
   const goToScreen = () => {
-    // Chuyển đến màn hình có tên là "AddSchedule"
-    navigation.navigate('AddWork');
-    console.log("mmmm")
+    navigation.navigate('AddWork', { reminder });
   };
 
   const goToScreen1 = () => {
-    // Chuyển đến màn hình có tên là "AddSchedule"
-    navigation.navigate('AddFrequency');
-    console.log("mmmm")
+    navigation.navigate('AddFrequency',{ reminder });
   };
-// console.log("///",work)
-
+  const frequencyStr = reminder.frequency != null ? 
+  (reminder.frequency == 1 ? "Hằng ngày" : reminder.frequency +" ngày một lần")
+  : convertUnixToDate(reminder.specificDate);
   return (
     <View style={{
       backgroundColor: '#FFFFFF',
@@ -74,7 +74,7 @@ export default function TaskComponent({setValueState, selectWork, setCheck, work
                 />
                 <Text style={{color:'#18B65B', paddingLeft: 10}}>Công việc</Text>
                 </View>
-                <Text>{work||'Tưới nước'}</Text>
+                <Text>{reminder.work}</Text>
                 </View>
             </TouchableOpacity>
             <TouchableOpacity onPress={()=>{setValueState('tanSuat'); goToScreen1()}}>
@@ -95,7 +95,7 @@ export default function TaskComponent({setValueState, selectWork, setCheck, work
                 />
                 <Text style={{color:'#18B65B', paddingLeft: 10}}>Tần suất</Text>
                 </View>
-                <Text>{frequency||'Hàng ngày'}</Text>
+                <Text>{frequencyStr } </Text>
                 </View>
             </TouchableOpacity>
             <TouchableOpacity onPress={()=>{setValueState('gio'); showModal()}}>

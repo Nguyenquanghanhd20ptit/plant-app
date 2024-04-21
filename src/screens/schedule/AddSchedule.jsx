@@ -9,8 +9,7 @@ import { useRoute } from '@react-navigation/native';
 
 export default function AddSchedule() {
   const route = useRoute();
-  const {name} = route.params;
-  console.log('bbb',name);
+  const {plant} = route.params;
   return (
     <View style={{
         backgroundColor: '#E7EBF7',
@@ -22,7 +21,7 @@ export default function AddSchedule() {
     }}>
         {/* <AddComponent></AddComponent> */}
         <AddComponent
-        name={name}></AddComponent>
+        plant={plant}></AddComponent>
     </View>
     <View
           style={{

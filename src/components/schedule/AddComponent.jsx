@@ -21,7 +21,7 @@ const flowerTrees = [
   // Thêm các cây hoa khác nếu cần
 ];
 
-export default function AddComponent({name}) {
+export default function AddComponent({plant}) {
   const navigation = useNavigation();
   const goToScreen = () => {
     // Chuyển đến màn hình có tên là "AddSchedule"
@@ -31,7 +31,7 @@ export default function AddComponent({name}) {
 let v=''
   const goToScreen1 = () => {
     // Chuyển đến màn hình có tên là "AddSchedule"
-    navigation.navigate('AddTask', {work:'', frequency:''});
+    navigation.navigate('AddTask');
     console.log("mmmm")
   };
 
@@ -112,11 +112,11 @@ let v=''
               source={require('../../assets/icons/treegray.png')}
             />
             {
-              name===''?(
+              plant===''?(
                 <Text style={{color: '#717086', paddingLeft: 10}}>Chọn cây</Text>
               ):
               (
-                <Text style={{color: 'black', paddingLeft: 10}}>{name}</Text>
+                <Text style={{color: 'black', paddingLeft: 10}}>{plant.name}</Text>
               )
             }
             

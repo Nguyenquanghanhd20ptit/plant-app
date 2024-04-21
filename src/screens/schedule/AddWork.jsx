@@ -7,23 +7,14 @@ import TaskComponent from '../../components/schedule/TaskComponent'
 import SelectWork from '../../components/schedule/SelectWork'
 import SelectFrequency from '../../components/schedule/SelectFrequency'
 import { useNavigation } from '@react-navigation/native';
-
+import { useRoute } from '@react-navigation/native';
 export default function AddWork() {
-    const [valueState, setValueState]= React.useState('');
-    const [selectWork, setSelectWork]= React.useState('');
-    const [check, setCheck]= React.useState(0);
+    const route = useRoute();
+    const [ reminder, setReminder] = React.useState(route.params.reminder);
     const navigation = useNavigation();
-    console.log("<<<<<",selectWork)
     const goToScreen1 = () => {
-      
-            navigation.navigate('AddTask', {work:  selectWork, frequency:'' });
-        
-       
-        console.log("mmmm", selectWork)
-
+            navigation.navigate('AddTask', {reminder:  reminder});
       };
-      console.log("bbbb",selectWork)
-
   return (
     <View style={{
         backgroundColor: '#E7EBF7',
@@ -33,17 +24,11 @@ export default function AddWork() {
     <View style={{
         top: 100
     }}>
-       
-        
-           
-                <SelectWork 
-                setSelectWork={setSelectWork}
-                setCheck={setCheck}
-                selectWork={selectWork}
-                goToScreen1={goToScreen1}></SelectWork>
-            
-        
-       
+          <SelectWork 
+          reminder={reminder}
+          setReminder={setReminder}
+          goToScreen1={goToScreen1}>
+          </SelectWork>
     </View>
     <View
           style={{

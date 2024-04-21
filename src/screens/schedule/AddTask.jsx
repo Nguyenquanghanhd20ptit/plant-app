@@ -1,23 +1,16 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import Header from '../../components/Header'
-import ScheduleComponent from '../../components/schedule/ScheduleComponent'
 import Menu from '../../components/Menu'
 import TaskComponent from '../../components/schedule/TaskComponent'
-import SelectWork from '../../components/schedule/SelectWork'
-import SelectFrequency from '../../components/schedule/SelectFrequency'
 import { useRoute } from '@react-navigation/native';
 import { Modal, Portal, Button, PaperProvider } from 'react-native-paper';
-import RNPickerSelect from 'react-native-picker-select';
 
 
 export default function AddTask() {
   const [valueState, setValueState] = React.useState('');
   const [check, setCheck] = React.useState(0);
   const route = useRoute();
-  const { work } = route.params;
-  const { frequency } = route.params;
-
   const [visible, setVisible] = React.useState(false);
   const showModal = () => setVisible(true);
   const hideModal = () => setVisible(false);
@@ -27,6 +20,23 @@ export default function AddTask() {
 
   const [selectedHorse, setSelectedHorse] = useState('9 giờ 00');
   const [selectedDay, setSelectedDay] = useState('18/3/2024');
+  const [reminder, setReminder] = useState( {
+  work: "Tưới nước",
+  frequency: 1,
+  specificDate: null,
+  hour: 32400000,
+  timeStart: 1713688082000,
+  note: null,
+});
+
+console.log(route.params)
+useEffect(() => {
+  if (route.params !== undefined && route.params.reminder !== undefined) {
+    setReminder(route.params.reminder);
+  }
+}, [route.params]);
+
+  console.log( reminder);
   const data = [];
   for (let i = 0; i <= 24; i++) {
     data.push({ id: `${i}`, text: `${i} giờ` });
@@ -160,10 +170,10 @@ export default function AddTask() {
       }}>
 
         <TaskComponent
+          reminder={reminder}
+          setReminder={setReminder}
           setValueState={setValueState}
           setCheck={setCheck}
-          work={work}
-          frequency={frequency}
           showModal={showModal}
           showModalDay={showModalDay}
           showModalNote={showModalNote}
