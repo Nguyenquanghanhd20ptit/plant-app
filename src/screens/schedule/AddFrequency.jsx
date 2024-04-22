@@ -1,10 +1,9 @@
 import React from 'react'
-import { Text, View } from 'react-native'
-import Header from '../../components/Header'
-import Menu from '../../components/Menu'
-import SelectFrequency from '../../components/schedule/SelectFrequency'
-import { useNavigation } from '@react-navigation/native';
-import { useRoute } from '@react-navigation/native';
+import { Text, View } from "react-native";
+import Header from "../../components/Header";
+import Menu from "../../components/Menu";
+import SelectFrequency from '../../components/schedule/SelectFrequency';
+import { useNavigation,useRoute } from '@react-navigation/native';
 
 export default function AddFrequency() {
     const route = useRoute();

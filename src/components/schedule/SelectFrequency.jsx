@@ -1,10 +1,7 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FlatList, Image, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native'
 import { useNavigation } from '@react-navigation/native';
 import { TextInput } from 'react-native-paper';
-
-const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-
 
 
 export default function SelectFrequency({ reminder, setReminder, goToScreen1 }) {
@@ -14,7 +11,7 @@ export default function SelectFrequency({ reminder, setReminder, goToScreen1 }) 
   const [selectedItemDay1, setSelectedItemDay1] = useState(null);
   const [selectedItemDay2, setSelectedItemDay2] = useState(null);
   const [selectedItemDay3, setSelectedItemDay3] = useState(null);
-
+  const [check, setCheck] = useState(false);
 
   const dataDay1 = [];
   for (let i = 1; i <= 31; i++) {
@@ -30,23 +27,27 @@ export default function SelectFrequency({ reminder, setReminder, goToScreen1 }) 
   }
 
 
-  const handleConfirmDay = () => {
+  const handleConfirmDay =  () => {
     console.log("dfdsfdsfkololll");
     dateObject = new Date(+selectedItemDay3, +selectedItemDay2 - 1, +selectedItemDay1);
     console.log(selectedItemDay1 + "/" + selectedItemDay2 + "/" + selectedItemDay3)
     console.log(dateObject.getTime());
-    setReminder(reminder => ({ ...reminder, frequency: null, specificDate: dateObject.getTime() }));
-    console.log(reminder);
-    goToScreen1();
-  };
+    setReminder({ ...reminder, frequency: null, specificDate: dateObject.getTime() });
+    setCheck(true);
+};
+    useEffect(()=>{
+      if(check == true){
+        goToScreen1();
+      }
+    },[check]);
 
   const handleFrequency = () => {
     console.log(text);
-    setReminder({ ...reminder, frequency: 4, specificDate: null });
-    setReminder({ ...reminder, work: 'Bón phân' });
+    setReminder({ ...reminder, frequency: +text, specificDate: null });
     console.log(reminder);
-    goToScreen1();
+    setCheck(true);
   }
+
   const renderItemDay1 = ({ item }) => {
     const itemStyle = selectedItemDay1 === item.id ? styles.selectedItem : styles.item;
 
@@ -226,7 +227,7 @@ export default function SelectFrequency({ reminder, setReminder, goToScreen1 }) 
                   alignItems: 'center',
                   marginTop: 20
                 }}
-                onPress={() => { handleFrequency() }}>
+                onPress={() => { handleFrequency()}}>
                 <View style={{
                   flexDirection: 'row',
                   justifyContent: 'space-between',

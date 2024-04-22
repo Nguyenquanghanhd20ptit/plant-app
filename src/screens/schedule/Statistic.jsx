@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { FlatList, Text, TouchableOpacity, View } from 'react-native'
+import { FlatList,StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import Header from '../../components/Header'
 import ScheduleComponent from '../../components/schedule/ScheduleComponent'
 import Menu from '../../components/Menu'
@@ -9,7 +9,6 @@ import SelectFrequency from '../../components/schedule/SelectFrequency'
 import { useNavigation, useRoute } from '@react-navigation/native';
 import StatisticComponnet from '../../components/schedule/StatisticComponnet'
 import { Modal } from 'react-native-paper'
-import { StyleSheet } from 'react-native'
 
 export default function Statistic() {
     const route = useRoute();

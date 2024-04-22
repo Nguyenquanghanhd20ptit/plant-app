@@ -1,10 +1,10 @@
+import { useRoute } from '@react-navigation/native'
 import React, { useEffect, useState } from 'react'
 import { FlatList, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Modal } from 'react-native-paper'
 import Header from '../../components/Header'
 import Menu from '../../components/Menu'
 import TaskComponent from '../../components/schedule/TaskComponent'
-import { useRoute } from '@react-navigation/native';
-import { Modal, Portal, Button, PaperProvider } from 'react-native-paper';
 
 
 export default function AddTask() {
@@ -17,26 +17,30 @@ export default function AddTask() {
   const containerStyle = { backgroundColor: 'white', padding: 20, marginHorizontal: 20, borderRadius: 10 };
   const [selectedItem, setSelectedItem] = useState(null);
   const [selectedItem1, setSelectedItem1] = useState(null);
-
   const [selectedHorse, setSelectedHorse] = useState('9 giờ 00');
   const [selectedDay, setSelectedDay] = useState('18/3/2024');
-  const [reminder, setReminder] = useState( {
-  work: "Tưới nước",
-  frequency: 1,
-  specificDate: null,
-  hour: 32400000,
-  timeStart: 1713688082000,
-  note: null,
-});
+  const [reminder, setReminder] = useState({
+    work: "Tưới nước",
+    frequency: 1,
+    specificDate: null,
+    hour: 32400000,
+    timeStart: 1713688082000,
+    note: null,
+  });
 
-console.log(route.params)
-useEffect(() => {
-  if (route.params !== undefined && route.params.reminder !== undefined) {
-    setReminder(route.params.reminder);
-  }
-}, [route.params]);
+  const [plant,setPlant] = useState(null);
 
-  console.log( reminder);
+  console.log(route.params)
+  useEffect(() => {
+    if (route.params !== undefined && route.params.reminder !== undefined) {
+      setReminder(route.params.reminder);
+    }
+    if (route.params !== undefined && route.params.plant !== undefined) {
+      setPlant(route.params.plant);
+    }
+  }, [route.params]);
+
+  console.log(reminder);
   const data = [];
   for (let i = 0; i <= 24; i++) {
     data.push({ id: `${i}`, text: `${i} giờ` });
@@ -94,7 +98,7 @@ useEffect(() => {
     dataDay2.push({ id: `${i}`, text: `tháng ${i}` });
   }
   const dataDay3 = [];
-  for (let i = 1999; i <= 2024; i++) {
+  for (let i = 2022; i <= 2028; i++) {
     dataDay3.push({ id: `${i}`, text: `${i}` });
   }
 
@@ -148,15 +152,19 @@ useEffect(() => {
   const showModalNote = () => setVisibleNote(true);
   const hideModalNote = () => setVisibleNote(false);
 
-  const [note, setNot] = useState('');
-
   const handleConfirmHorse = () => {
-    setSelectedHorse(selectedItem + ' giờ ' + selectedItem1 );
+    const dateObject = new Date();
+    dateObject.setHours(+selectedItem);
+    dateObject.setMinutes(+selectedItem1);
+    setReminder({ ...reminder, hour: dateObject.getTime() });
     hideModal();
   };
 
   const handleConfirmDay = () => {
-    setSelectedDay(selectedItemDay1 + '/' + selectedItemDay2 + '/' + selectedItemDay3);
+    let dateObject = new Date(+selectedItemDay3, +selectedItemDay2 - 1, +selectedItemDay1);
+    console.log(selectedItemDay1 + "/" + selectedItemDay2 + "/" + selectedItemDay3)
+    console.log(dateObject.getTime())
+    setReminder({ ...reminder, timeStart: dateObject.getTime() });
     hideModalDay();
   };
   return (
@@ -172,14 +180,11 @@ useEffect(() => {
         <TaskComponent
           reminder={reminder}
           setReminder={setReminder}
+          plant={plant}
           setValueState={setValueState}
-          setCheck={setCheck}
           showModal={showModal}
           showModalDay={showModalDay}
           showModalNote={showModalNote}
-          selectedHorse={selectedHorse} 
-          selectedDay = {selectedDay}
-          note = {note}
         ></TaskComponent>
 
       </View>
@@ -321,8 +326,8 @@ useEffect(() => {
             numberOfLines={4} // Số dòng tối đa trước khi xuống dòng
             style={{ height: '90%', width: '80%', padding: 10 }}
             placeholder="Type here to translate!"
-            onChangeText={newText => setNot(newText)}
-            defaultValue={note}
+            onChangeText={newText => setReminder({ ...reminder, note: newText })}
+            defaultValue={reminder.note}
           />
 
           {/* <Text style={{padding: 10, fontSize: 42}}>

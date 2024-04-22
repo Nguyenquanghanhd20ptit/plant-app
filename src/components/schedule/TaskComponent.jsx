@@ -1,14 +1,24 @@
 import React from 'react'
-import { FlatList, Image, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native'
+import { Alert, FlatList, Image, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native'
 import { useNavigation } from '@react-navigation/native';
 import { Modal, Portal, Button, PaperProvider } from 'react-native-paper';
 import moment from 'moment';
+import { API_URL } from '../../constants/commonConstant';
 
-export default function TaskComponent({ reminder,setReminder,setValueState, setCheck,
-   showModal, showModalDay, showModalNote, selectedHorse, selectedDay,note}) {
-    const convertUnixToDate = (unixTime) => {
+export default function TaskComponent({ reminder,setReminder,plant,setValueState,
+   showModal, showModalDay, showModalNote}) {
+   
+   const convertUnixToDate = (unixTime) => {
       return moment(unixTime).format('DD-MM-YYYY');
     };
+
+    const longToTimeFormat = (timeLong) => {
+      const dateObject = new Date(timeLong);
+      const hours = ("0" + dateObject.getHours()).slice(-2);
+      const minutes = ("0" + dateObject.getMinutes()).slice(-2);
+      return `${hours} giờ ${minutes}`;
+  };
+
   const navigation = useNavigation();
   const goToScreen = () => {
     navigation.navigate('AddWork', { reminder });
@@ -17,9 +27,50 @@ export default function TaskComponent({ reminder,setReminder,setValueState, setC
   const goToScreen1 = () => {
     navigation.navigate('AddFrequency',{ reminder });
   };
+  
+  const goToScreenScheduler = () =>{
+    navigation.navigate('AddSchedule', { plant: plant });
+  }
+
+  const callToApiAddRemider = () => {
+    console.log("fdf")
+    fetch(  API_URL.PlantApp +'/reminder/addNew', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(reminder),
+    })
+      .then(response => {
+        console.log(response);
+        console.log(reminder);
+        if (!response.ok) {
+          throw new Error('Thêm mới thất bại hãy thử lại');
+        }
+        return response.json();
+      })
+      .then(data => {
+        if (data && data.errorCode === '00') {
+          const value = JSON.parse(data.data);
+          console.log(value);
+          goToScreenScheduler();
+        } else if (data && data.errorMessage) {
+          Alert.alert('Thông báo', data.errorMessage);
+        } else {
+          Alert.alert('Thông báo', 'Thêm mới thất bại hãy thử lại');
+        }
+      })
+      .catch(error => {
+        Alert.alert('Thông báo', error.message);
+      });
+  };
+  
   const frequencyStr = reminder.frequency != null ? 
   (reminder.frequency == 1 ? "Hằng ngày" : reminder.frequency +" ngày một lần")
   : convertUnixToDate(reminder.specificDate);
+
+  const startTimeStr = convertUnixToDate( reminder.timeStart );
+  const hourStr = longToTimeFormat(reminder.hour);
   return (
     <View style={{
       backgroundColor: '#FFFFFF',
@@ -116,7 +167,7 @@ export default function TaskComponent({ reminder,setReminder,setValueState, setC
                 />
                 <Text style={{color:'#18B65B', paddingLeft: 10}}>Giờ</Text>
                 </View>
-                <Text>{selectedHorse}</Text>
+                <Text>{hourStr}</Text>
                 </View>
             </TouchableOpacity>
        
@@ -138,7 +189,7 @@ export default function TaskComponent({ reminder,setReminder,setValueState, setC
                 />
                 <Text style={{color:'#18B65B', paddingLeft: 10}}>Ngày bắt đầu</Text>
                 </View>
-                <Text>{selectedDay}</Text>
+                <Text>{startTimeStr}</Text>
                 </View>
             </TouchableOpacity>
             <TouchableOpacity onPress={()=>{setValueState('ghiChu'); showModalNote()}}>
@@ -159,7 +210,7 @@ export default function TaskComponent({ reminder,setReminder,setValueState, setC
                 />
                 <Text style={{color:'#18B65B', paddingLeft: 10}}>Ghi chú</Text>
                 </View>
-                <Text>{note}</Text>
+                <Text>{reminder.note}</Text>
                 </View>
             </TouchableOpacity>
             
@@ -179,7 +230,7 @@ export default function TaskComponent({ reminder,setReminder,setValueState, setC
             borderRadius: 10,
             marginBottom: 10,
           }}
-         >
+          onPress={() => callToApiAddRemider() }>
           <View>
           <Text style={{
             color: 'white'
