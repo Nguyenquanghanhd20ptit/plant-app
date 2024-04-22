@@ -12,8 +12,7 @@ import { Modal } from 'react-native-paper'
 
 export default function Statistic() {
     const route = useRoute();
-    const {name} = route.params;
-    console.log(">>>>", name)
+    const [plant,setPlant] = React.useState(null);
     const [visibleDay, setVisibleDay] = React.useState(false);
     const showModalDay = () => setVisibleDay(true);
     const hideModalDay = () => setVisibleDay(false);
@@ -21,6 +20,13 @@ export default function Statistic() {
     const [selectedItemDay1, setSelectedItemDay1] = useState(null);
     const [selectedItemDay2, setSelectedItemDay2] = useState(null); 
     const [selectedItemDay3, setSelectedItemDay3] = useState(null); 
+    const [selectTime, setSelectTime] = useState(null);
+    const [checkBeginTime,setCheckBeginTime] = React.useState(true);
+    const [beginTime, setBeginTime] = React.useState(null);
+    const [endTime, setEndTime] = React.useState(null);
+    if(plant == null){
+      setPlant(route.params.plant);
+    }
     const dataDay1 = [];
     for (let i = 1; i <= 30; i++) {
       dataDay1.push({ id: `${i}`, text: `${i}` });
@@ -30,14 +36,25 @@ export default function Statistic() {
       dataDay2.push({ id: `${i}`, text: `tháng ${i}` });
     }
     const dataDay3 = [];
-    for (let i = 1999; i <= 2024; i++) {
+    for (let i = 2022; i <= 2024; i++) {
       dataDay3.push({ id: `${i}`, text: `${i}` });
     }
+
+    const setValueTime = () => {
+      let dateObject = new Date(+selectedItemDay3, +selectedItemDay2 - 1, +selectedItemDay1);
+      console.log(selectedItemDay1 + "/" + selectedItemDay2 + "/" + selectedItemDay3)
+      if(checkBeginTime == true){
+        setBeginTime(dateObject.getTime());
+      }else{
+        setEndTime(dateObject.getTime());
+      }
+      hideModalDay();
+    };
 
   
     const renderItemDay1 = ({ item }) => {
       const itemStyle = selectedItemDay1 === item.id ? styles.selectedItem : styles.item;
-  
+    
       return (
         <TouchableOpacity onPress={() => setSelectedItemDay1(item.id)}>
           <View style={itemStyle}>
@@ -90,8 +107,11 @@ export default function Statistic() {
         top: 100
     }}>
        <StatisticComponnet
-       name={name}
-       showModalDay={showModalDay}></StatisticComponnet>
+       plant={plant}
+       beginTime={beginTime}
+       endTime={endTime}
+       showModalDay={showModalDay}
+       setCheckBeginTime={setCheckBeginTime}></StatisticComponnet>
 
     </View>
     <View
@@ -145,7 +165,7 @@ export default function Statistic() {
                 alignItems:'center',
                 marginTop: 20
             }}
-            onPress={()=>{ hideModalDay()}}>
+            onPress={()=>{ setValueTime();}}>
                 <View style={{
                     flexDirection:'row',
                     justifyContent: 'space-between',

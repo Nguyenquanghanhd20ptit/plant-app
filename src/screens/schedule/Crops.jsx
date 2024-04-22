@@ -77,9 +77,8 @@ const callToApiSearchTree = () => {
     });
 };
   
-const handleSelectName = (item) => {
-  const name=item.name;
-  navigation.navigate('Statistic',{name: name})
+const handleSelectName = (plant) => {
+  navigation.navigate('Statistic',{plant: plant})
  };
 
 
