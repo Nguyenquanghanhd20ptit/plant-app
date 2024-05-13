@@ -14,12 +14,13 @@ export default function AddComponent({ plant }) {
   const [check,setCheck] = React.useState(false);
   const [fetchScheduler, setFetchScheduler] = useState(false);
   const isFocused = useIsFocused();
+  const [reloadWhenDelete, setReloadWhenDelete] = React.useState(false);
   const [reminder, setReminder] = useState({
     work: "Tưới nước",
     frequency: 1,
     specificDate: null,
     hour: 32400000,
-    timeStart: 1713688082000,
+    timeStart: 1713934940000,
     note: null,
   });
   const convertUnixToDate = (unixTime) => {
@@ -74,8 +75,9 @@ export default function AddComponent({ plant }) {
   useEffect(() => {
     if(plant !== '' && check == true){
       callToApiGetScheduler(); 
+      setReloadWhenDelete(false);
     }
-  }, [plant,check,isFocused]);
+  }, [plant,check,isFocused,reloadWhenDelete == true]);
 
   const callToApiGetScheduler = () => {
     console.log("fdfdfdf")
@@ -138,8 +140,8 @@ export default function AddComponent({ plant }) {
             .then(data => {
               if (data) {
                 if (data.errorCode === '00') {
-                  const value = JSON.parse(data.data);
                   setReloadWhenDelete(true);
+                  const value = JSON.parse(data.data);
                   Alert.alert('Thông báo', value);
                 } else if (data.errorMessage) {
                   Alert.alert('Thông báo', data.errorMessage);
@@ -196,7 +198,7 @@ export default function AddComponent({ plant }) {
               </Text>
             <Text style={{ fontSize: 10, color: '#434343' }}>{reminderData.period}</Text>
             <Text style={{ fontSize: 10, color: '#434343' }}>{longToTimeFormat(reminderData.hour)}</Text>
-            <TouchableOpacity onPress={() => {callToApiDeleteRemider(reminder)}}>
+            <TouchableOpacity onPress={() => {callToApiDeleteRemider(reminderData)}}>
             <Image
               style={{height: 12, width: 16}}
               source={require('../../assets/icons/delete1.png')}
