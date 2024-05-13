@@ -1,79 +1,100 @@
-import React, { useState } from 'react';
-import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { FlatList, StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native';
 import Header from '../../components/Header';
 import Menu from '../../components/Menu';
-import { ScrollView, Image } from 'react-native';
+import { ScrollView } from 'react-native';
 
 const Notice = () => {
-  const [notifications, setNotifications] = useState([
-    {
-      id: 1,
-      content: 'Thông báo 1',
-      status: 'unread',
-      date: new Date('2023-11-14'),
-    },
-    {
-      id: 2,
-      content: 'Thông báo 2',
-      status: 'unread',
-      date: new Date('2023-11-14'),
-    },
-    {
-      id: 3,
-      content: 'Thông báo 3',
-      status: 'read',
-      date: new Date('2023-11-14'),
-    },
-    {
-        id: 4,
-        content: 'Thông báo 4',
-        status: 'read',
-        date: new Date('2023-11-14'),
-      },
-      {
-        id: 5,
-        content: 'Thông báo 5',
-        status: 'read',
-        date: new Date('2023-11-14'),
-      },
-      {
-        id: 6,
-        content: 'Thông báo 6',
-        status: 'read',
-        date: new Date('2023-11-14'),
-      },
-      {
-        id: 7,
-        content: 'Thông báo 7',
-        status: 'read',
-        date: new Date('2023-11-14'),
-      },
-      {
-        id: 8,
-        content: 'Thông báo 8',
-        status: 'read',
-        date: new Date('2024-03-25'),
-      },
-      {
-        id: 9,
-        content: 'Thông báo 9',
-        status: 'read',
-        date: new Date('2024-03-25'),
-      },
-      {
-        id: 10,
-        content: 'Thông báo 10',
-        status: 'read',
-        date: new Date('2024-03-25'),
-      },
-      {
-        id: 11,
-        content: 'Thông báo 11',
-        status: 'read',
-        date: new Date('2024-03-25'),
-      },
+  const [notifications, setNotifications] = useState([]);
+  const [user, setUser] = useState(null);
+  const [schedulers, setSchedulers] = useState([]);
 
-  ]);
+  // if(user == null)
+  //  AsyncStorage.getItem(LOCALSTORATE_CONSTANT.MyInfo)
+  //   .then((userData) => {
+  //     if (userData) {
+  //       setUser(JSON.parse(userData));
+  //       setCheck(true);
+  //       console.log(user);
+  //     } else {
+  //       console.log('Không có dữ liệu người dùng trong AsyncStorage');
+  //     }
+  //   })
+  //   .catch((error) => {
+  //     console.error('Lỗi khi lấy dữ liệu người dùng từ AsyncStorage:', error);
+  //   });
+
+  //   useEffect(() => {
+  //     if(check == true){
+  //       callToApiGetAllScheduler();
+  //       console.log("fđfsdfdfdffdfd");
+  //       setReloadWhenDelete(false);
+  //     }
+
+  //   }, [check,isFocused, reloadWhenDelete == true]);
+  // if (user == null)
+  //   AsyncStorage.getItem(LOCALSTORATE_CONSTANT.MyInfo)
+  //     .then((userData) => {
+  //       if (userData) {
+  //         setUser(JSON.parse(userData));
+  //         setCheck(true);
+  //         console.log(user);
+  //       } else {
+  //         console.log('Không có dữ liệu người dùng trong AsyncStorage');
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.error('Lỗi khi lấy dữ liệu người dùng từ AsyncStorage:', error);
+  //     });
+
+  // useEffect(() => {
+  //   if (check == true) {
+  //     callToApiGetAllScheduler();
+  //     console.log("fđfsdfdfdffdfd");
+  //     setReloadWhenDelete(false);
+  //   }
+  // }, [check, isFocused, reloadWhenDelete == true]);
+
+  const callToApiGetAllScheduler = () => {
+    console.log('bắt đầu vào hàm call api');
+    fetch(`https://7603-123-16-132-154.ngrok-free.app/plant-app/scheduler/all/?userId=1`, {
+      method: 'GET'
+    })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Lấy thông tin lịch trình thất bại hãy thử lại');
+        }
+        console.log('bắt đầu vào hàm call api 1');
+        return response.json();
+      })
+      .then(data => {
+        if (data) {
+          if (data.errorCode === '00') {
+            const value = JSON.parse(data.data);
+            console.log('bắt đầu vào hàm call api 2' + value);
+            setSchedulers(value);
+
+            value.forEach(element => {
+              element.reminders.forEach(element1 => {
+                console.log("log hour: " + element1.hour)
+              })
+            });
+            // setNotifications(value.reminders);
+          } else if (data.errorMessage) {
+            Alert.alert('Thông báo', data.errorMessage);
+          } else {
+            Alert.alert('Thông báo', 'Lấy thông tin lịch trình thất bại hãy thử lại');
+          }
+        } else {
+          Alert.alert('Thông báo', 'Không có dữ liệu trả về');
+        }
+      })
+      .catch(error => {
+        Alert.alert('Thông báo', error.message);
+      });
+  };
+  //Call lấy dữ liệu từ DB rồi set vào scheduler
+  useEffect(() => { callToApiGetAllScheduler(); }, []); // empty array as dependency to run only once
 
   const getTodaysNotifications = () => {
     const today = new Date();
@@ -101,59 +122,180 @@ const Notice = () => {
   };
 
   const renderItem = ({ item }) => {
+
+    function stringToMinutes(timeString) {
+      // Tách các thành phần từ chuỗi
+      const parts = timeString.split(' ');
+
+      // Tách ngày, tháng, năm từ phần đầu tiên
+      const dateParts = parts[0].split('-');
+      const day = parseInt(dateParts[0]);
+      const month = parseInt(dateParts[1]) - 1; // Trừ 1 vì tháng bắt đầu từ 0
+      const year = parseInt(dateParts[2]);
+
+      // Tách giờ và phút từ phần thứ hai
+      const timeParts = parts[1].split(':');
+      const hour = parseInt(timeParts[0]);
+      const minute = parseInt(timeParts[1]);
+
+      // Tạo đối tượng Date
+      const dateTime = new Date(year, month, day, hour, minute);
+
+      // Chuyển đổi thành số phút kể từ nửa đêm
+      const midnight = new Date(year, month, day, 0, 0);
+      const minutesSinceMidnight = Math.floor((dateTime - midnight) / (1000 * 60));
+
+      return minutesSinceMidnight;
+    }
+
+    console.log(`bắt đầu render`)
+    var noticeString;
+    var today = new Date();
+    var date = today.getDate() + '-' + (today.getMonth() + 1) + '-' + today.getFullYear();
+    var time = "00:00";
+    var dateTime = date + ' ' + time;
+    var thoigian = stringToMinutes(dateTime);
+
+    item.reminders.forEach(element1 => {
+      // console.log("thời gian thực nè" + thoigian + typeof (thoigian));
+      // console.log("thời gian cần để chăm sóc cây" + stringToMinutes(element1.hour));
+      console.log(element1.hour);
+      var check = new Date(element1.hour) <= thoigian;
+
+      console.log(check);
+      // if (check) {
+      noticeString = item.plant.name + element1.work + element1.hour;
+      console.log(`In ra cái thông báo nè` + noticeString)
+      // }
+    })
     return (
-        <View style={styles.notification}>
-            <Text style={styles.content}>{item.content}</Text>
-            <View style={styles.buttons}>
-                <TouchableOpacity onPress={() => handleMarkAsRead(item.id)}>
-                    {/* <Text style={styles.markAsRead}>Done</Text> */}
-                    <Image
-                      style={styles.tick}
-                      source={require("../../assets/icons/tick.png")}
-                    />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={() => handleDeleteNotification(item.id)}>
-                    {/* <Text style={styles.delete}>Xoá</Text> */}
-                    <Image
-                      style={styles.delete}
-                      source={require("../../assets/icons/delete1.png")}
-                    />
-                </TouchableOpacity>
-            </View>
+      <View style={styles.notification}>
+        <Text style={styles.content}>{noticeString}</Text>
+        <View style={styles.buttons}>
+          <TouchableOpacity >
+            <Image
+              style={styles.tick}
+              source={require("../../assets/icons/tick.png")}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity >
+            <Image
+              style={styles.delete}
+              source={require("../../assets/icons/delete1.png")}
+            />
+          </TouchableOpacity>
         </View>
+      </View>
     );
   };
 
+  // //Render Notify pre
+  // const renderItemPre = ({ item }) => {
+
+  //   function stringToMinutes(timeString) {
+  //     // Tách các thành phần từ chuỗi
+  //     const parts = timeString.split(' ');
+
+  //     // Tách ngày, tháng, năm từ phần đầu tiên
+  //     const dateParts = parts[0].split('-');
+  //     const day = parseInt(dateParts[0]);
+  //     const month = parseInt(dateParts[1]) - 1; // Trừ 1 vì tháng bắt đầu từ 0
+  //     const year = parseInt(dateParts[2]);
+
+  //     // Tách giờ và phút từ phần thứ hai
+  //     const timeParts = parts[1].split(':');
+  //     const hour = parseInt(timeParts[0]);
+  //     const minute = parseInt(timeParts[1]);
+
+  //     // Tạo đối tượng Date
+  //     const dateTime = new Date(year, month, day, hour, minute);
+
+  //     // Chuyển đổi thành số phút kể từ nửa đêm
+  //     const midnight = new Date(year, month, day, 0, 0);
+  //     const minutesSinceMidnight = Math.floor((dateTime - midnight) / (1000 * 60));
+
+  //     return minutesSinceMidnight;
+  //   }
+  //   //render Những thông báo trước đó
+  //   console.log(`bắt đầu render trước đó`)
+  //   var noticeString;
+  //   var today = new Date();
+  //   var date = today.getDate() + '-' + (today.getMonth() + 1) + '-' + today.getFullYear();
+  //   var time = today.getHours() + ":" + today.getMinutes();
+  //   var dateTime = date + ' ' + time;
+  //   var thoigian = stringToMinutes(dateTime);
+
+  //   item.reminders.forEach(element1 => {
+  //     console.log("thời gian thực nè" + thoigian + typeof (thoigian));
+  //     console.log("thời gian cần để chăm sóc cây" + stringToMinutes(element1.hour));
+
+  //     var check = new Date(element1.hour) <= thoigian;
+
+  //     console.log(check);
+  //     if (check) {
+  //       noticeString = item.plant.name + element1.work + element1.hour;
+  //       console.log(`In ra cái thông báo nè` + noticeString)
+  //     }
+  //   })
+  //   return (
+  //     <View style={styles.notification}>
+  //       <Text style={styles.content}>{noticeString}</Text>
+  //       <View style={styles.buttons}>
+  //         <TouchableOpacity >
+  //           <Image
+  //             style={styles.tick}
+  //             source={require("../../assets/icons/tick.png")}
+  //           />
+  //         </TouchableOpacity>
+  //         <TouchableOpacity >
+  //           <Image
+  //             style={styles.delete}
+  //             source={require("../../assets/icons/delete1.png")}
+  //           />
+  //         </TouchableOpacity>
+  //       </View>
+  //     </View>
+  //   );
+  // };
+
   return (
     <>
-    <View style={styles.header1}>
-        <Header></Header>
-    </View>
-    <View style={styles.container}>
+      <View style={styles.header1}>
+        <Header />
+      </View>
+      <View style={styles.container}>
         <Text style={styles.textNotice}>Thông báo</Text>
         <View style={styles.today}>
           <Text style={styles.textToday}>Hôm nay</Text>
-            <ScrollView>
-              <FlatList
-                data={notifications}
-                renderItem={renderItem}
-                keyExtractor={(item) => item.id.toString()} />
-            </ScrollView>
+          <ScrollView>
+            <FlatList
+              data={schedulers}
+              renderItem={renderItem}
+              keyExtractor={({ id }, index) => id}
+            />
+          </ScrollView>
         </View>
         <View style={styles.previous}>
-          <Text style={styles.textPre}>Trước đó</Text> 
+          <Text style={styles.textPre}>Trước đó</Text>
+          <ScrollView>
+            <FlatList
+              data={schedulers}
+              renderItem={renderItem}
+              keyExtractor={({ id }, index) => id}
+            />
+          </ScrollView>
         </View>
-          
-    </View>
-    <View style={styles.footer1}>
-        <Menu></Menu>
-    </View>      
+
+      </View>
+      <View style={styles.footer1}>
+        <Menu />
+      </View>
     </>
   );
 };
 
 const styles = StyleSheet.create({
-  textNotice:{
+  textNotice: {
     fontSize: 20,
     fontWeight: "bold"
   },
@@ -166,25 +308,25 @@ const styles = StyleSheet.create({
     borderRadius: 30,
   },
 
-  today:{
+  today: {
     fontWeight: "bold",
     marginTop: 20,
     marginBottom: 20,
     flex: 0.5,
   },
 
-  textToday:{
-    fontWeight:"bold",
-    marginBottom:5,
+  textToday: {
+    fontWeight: "bold",
+    marginBottom: 5,
     textDecorationLine: "underline",
   },
 
-  previous:{
+  previous: {
   },
 
-  textPre:{
-    fontWeight:"bold",
-    marginBottom:5,
+  textPre: {
+    fontWeight: "bold",
+    marginBottom: 5,
     textDecorationLine: "underline"
   },
 
@@ -211,7 +353,7 @@ const styles = StyleSheet.create({
     height: 20,
     marginLeft: 10
   },
-  footer1:{
+  footer1: {
     position: "fixed",
     left: 0,
     bottom: 0,

@@ -15,10 +15,11 @@ import LoginScreen from './src/screens/login/LoginScreen';
 import RegisterScreen from './src/screens/register/RegisterScreen';
 import NotificationScreen from './src/screens/notification/NotificationScreen';
 import Notice from './src/screens/notification/Notice';
-
 const Stack = createStackNavigator();
+import registerNNPushToken from 'native-notify';
 
 export default function App() {
+  registerNNPushToken(20883, 'DLNtrIfmFDr3TmskCXsdri');
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Notify">
